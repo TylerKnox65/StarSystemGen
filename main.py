@@ -9,7 +9,7 @@ import names
 class star():
     def __init__(self) -> None:
         #Func
-        self.genName()
+        #self.genName()
         file = 'stardatabase.db'
         self.connection = sqlite3.connect(file)
         self.cursor = self.connection.cursor()
@@ -23,14 +23,48 @@ class star():
             planetoid int,
             scoutbase tinytext,
             size int,
-             tinytext);
+            atm int,
+            hyd int,
+            population int,
+            govt int,
+            lawlvl int,
+            techlvl int);
         """
         self.cursor.execute(query)
+        self.PlanetUPP()
+        query = "select * from starsystem"
+        self.cursor.execute(query)
+        result = self.cursor.fetchall()
+        print("Num, Name, Starport LVL, Is Navel Base?, Is gas giant?, is stciut base?, Size, Atm,Hyd,Population,govt,lawlvl,techlvl\n")
+       # for i in result:
+        #    print(i)
+        self.look_pretty()
 
-        pass
+    def look_pretty(self):
+        query = "select * from starsystem"
+        self.cursor.execute(query)
+        result = self.cursor.fetchall()
+        for i in result:
+            '''
+            planetName tinytext,
+            starport int,
+            navelbase boolean,
+            gasgiant tinytext,
+            planetoid int,
+            scoutbase tinytext,
+            size int,
+            atm int,
+            hyd int,
+            population int,
+            govt int,
+            lawlvl int,
+            techlvl int
+            '''
+            #print(f"Planet Name: {i[1]}, Starport:  {i[2]}, Navel Base:  {i[3]}, Gasgiant:  {i[4]}, Planetoid:  {i[5]}, Scout Base:  {i[6]}, Planet Size:  {i[7]}\nAtmosphere:  {i[8]}, Hydogenics:  {i[8]}, Population:  {i[10]}, Government level:  {i[11]}, Law Level:  {i[12]}, Tech Level:  {i[13]}\n")
+            print(f"\n          Planet Name: {i[1]}\n--------------------------------------\n  Starport:  {i[2]}         Navel Base: {i[3]}\n  Gasgiant: {i[4]}           Planetoid: {i[5]}\n  Scout Base: {i[6]}        Planet Size: {i[7]}\n  Atmosphere: {i[8]}         Hydrogeneics: {i[9]}\n  Population: {i[10]}         Government : {i[11]}\n  Law level: {i[12]}           Tech level: {i[13]}\n")
+    
     
     def starportType(self):
-        
         roll = sum(self.dice(2))
         if roll == 2 or roll == 3 or roll == 4:
             self.starport = 10
@@ -39,20 +73,21 @@ class star():
         elif roll == 7 or roll == 8:
             self.starport = 12
         elif roll == 9:
-            self.starport == 13
+            self.starport = 13
         elif roll == 10 or roll == 11:
-            self.starport == 14
+            self.starport = 14
         elif roll == 12:
-            self.starport == 16
+            self.starport = 16
         return self.starport
 
     def isNavelBase(self):
         roll = sum(self.dice(2))
         if roll > 7:
-            self.navelbase == True
+            self.navelbase = True
         else:
-            self.navelbase == False
+            self.navelbase = False
         return self.navelbase
+    
     def isGasGiant(self):
         roll = sum(self.dice(2))
         if roll > 9:
@@ -65,16 +100,17 @@ class star():
     def isPlanetoids(self):
         roll = sum(self.dice(2))
         if roll > 6:
-            self.planetoids == False
+            self.planetoids = False 
         else:
-            self.planetoids == True
+            self.planetoids = True
         return self.planetoids
+        
     def isScoutBase(self):
         roll = sum(self.dice(2))
         if roll > 6:
-             self.scout == True
+             self.scout = True
         else:
-            self.scout == False
+            self.scout = False
         return self.scout
 
     def genName(self):
@@ -87,13 +123,21 @@ class star():
         return self.planetsize
     
     def PlanetUPP(self):
-        self.starportType()
-        self.genPlanetSize()
+        
+        '''
         self.genAtm()
         self.genHyd()
         self.genPopulation()
         self.genGovt()
+        self.Lawlvl()
         self.dtTechlvl()
+        '''
+        query = f"insert into starsystem (planetname,starport,navelbase,gasgiant,planetoid,scoutbase,size,atm,hyd,population,govt,lawlvl,techlvl) values ('{self.genName()}','{self.starportType()}','{self.isNavelBase()}','{self.isGasGiant()}','{self.isPlanetoids()}','{self.isScoutBase()}','{self.genPlanetSize()}','{self.genAtm()}','{self.genHyd()}','{self.genPopulation()}','{self.genGovt()}','{self.Lawlvl()}','{self.dtTechlvl()}');"
+        self.cursor.execute(query)
+        self.connection.commit()
+        #I'm a goofy goober
+        #I agree with the comment above
+        #I challenge you to a debate
 
     def dice(self,num=1):  
         randList = []  
@@ -105,35 +149,40 @@ class star():
     def isTravel(self):
         pass
         
-        #dieroll = random.randint(2,12)
+        
     
     def genAtm(self):
         if self.planetsize != 0:
-            self.atm = ((self.dice(2)) - 7) + self.planetsize
+            self.atm = (sum((self.dice(2))) - 7) + self.planetsize
         
         return self.atm
     
     
     def genHyd(self):
-        self.hyd = ((self.dice(2)) - 7) + self.planetsize
+        self.hyd = (sum((self.dice(2))) - 7) + self.planetsize
         if self.planetsize <= 1:
             self.hyd = 0
         if self.hyd < 0:
-            self.hyd == 0
+            self.hyd = 0
         if self.hyd > 10:
             self.hyd = 10
+        return self.hyd
         
     def genPopulation(self):
-        self.population = ((self.dice(2)) - 2)
+        self.population = (sum(self.dice(2)) - 2)
+        return self.population
 
         
     def genGovt(self):
-        self.govt = ((self.dice(2)) - 7) + self.population
+        self.govt = (sum(self.dice(2)) - 7) + self.population
+        return self.govt
 
     def Lawlvl(self):
-        self.law = ((self.dice(2)) - 7) + self.govt
+        self.law = (sum(self.dice(2)) - 7) + self.govt
+        return self.law
+        
     def dtTechlvl(self):
-        self.techlvl = self.dice(1)
+        self.techlvl = sum(self.dice(1))
         if self.starport == 10:
             self.techlvl += 6
         if self.starport == 11:
@@ -166,6 +215,7 @@ class star():
             self.techlvl +=1
         if self.govt == 13:
             self.techlvl -=2
+        return self.techlvl
         
         
 
@@ -178,6 +228,9 @@ class star():
 #class universe():
 
 star()
+class createUniverse():
+    def __init__(self) -> None:
+        pass
 
 
 
