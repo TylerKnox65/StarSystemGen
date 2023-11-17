@@ -35,7 +35,7 @@ class star():
         query = "select * from starsystem"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        print("Num, Name, Starport LVL, Is Navel Base?, Is gas giant?, is stciut base?, Size, Atm,Hyd,Population,govt,lawlvl,techlvl\n")
+        #print("Num, Name, Starport LVL, Is Navel Base?, Is gas giant?, is stciut base?, Size, Atm,Hyd,Population,govt,lawlvl,techlvl\n")
        # for i in result:
         #    print(i)
         self.look_pretty()
@@ -235,160 +235,213 @@ class star():
 class createUniverse():
     def __init__(self) -> None:
         #star()
+        self.current_val = 0
+        self.firstPass = True
         file = 'stardatabase.db'
         self.connection = sqlite3.connect(file)
         self.cursor = self.connection.cursor()
+        
+        import PySimpleGUI as sg
+        sg.theme('DarkAmber')
+        temp = ['<','>','=']
+        temp2 = ['planetName','starport','navelbase','gasgiant','planetoid','scoutbase','size','atm','hyd','population','govt','lawlvl','techlvl']
+        temp3 = ['planetName','size','atm','hyd','population','govt','lawlvl','techlvl','getall']
+        layout = [  [sg.Text('Star system generator and database search tool'),sg.Button("Gen New Starsystem",key="NEWStar")],
+            [sg.Text('Enter what you are seaching'), sg.InputText()],
+            [sg.Text("Symbol"),sg.Combo(values=temp),sg.Button('Search'), sg.Button('Help'), sg.Combo(values=temp3),sg.Push()],
+            [sg.Button("Left"),sg.Push(),sg.Button("Right")],
+            [sg.Text("",key="updateText",justification="left")],
+            [sg.Text("",key="ANSON")]]
+        self.window = sg.Window('Window Title', layout,element_justification="c")
+        #self.window['ButtonLeft'].update(visible=False)    
+        #self.window['ButtonRight'].update(visible=False)         
+        self.mainRun()
+                
+    def mainRun(self):
+        
+        while True:             
+            event, values = self.window.read()
+            
+            if event in ('Search'):
+                
+                print(values[0],values[1],values[2])
+                x = self.searchQuery(values[0],values[1],values[2])
+                #print(type(x))
+                #output = ""
+                #for i in x:
+                #    output += str(i) + "\n"
+               
+                #self.window['ButtonLeft'].update(visible=True)    
+                #self.window['ButtonRight'].update(visible=True)
+
+                self.window['updateText'].update(f"Index: {x[self.current_val][0]}\nName: {x[self.current_val][1]}\n--------------------------------------------\nStarport: {x[self.current_val][2]}            NavelBase: {x[self.current_val][3]}\nGasGiant: {x[self.current_val][4]}     Planetoid: {x[self.current_val][5]}\nScoutBase: {x[self.current_val][6]}   Size: {x[self.current_val][7]}\nAtmosphere: {x[self.current_val][8]}       Hydrogenics: {x[self.current_val][9]}\nPopulation: {x[self.current_val][10]}         Govt: {x[self.current_val][11]}\nLawLVL: {x[self.current_val][12]}             TechLVL: {x[self.current_val][13]}")
+            elif event in ('Help'):
+                print("Help ran")
+                self.window['ANSON'].update("1) select what planet you are looking for by name or by number of the starsystem option\n2) select the symbol to greater than, lesser than or equal to the number you select \n3) select the starsystem option you want")
+            elif event in ('NEWStar'):
+                print("NEW start ran")
+                star()
+
+            elif event in ("Left"):
+                print("L")
+                self.current_val -= 1
+                if self.current_val < 0:
+                    try:
+                        self.current_val = len(x)-1
+                    except UnboundLocalError:
+                        self.current_val = 0
+                try:
+                    #planetname,starport,navelbase,gasgiant,planetoid,scoutbase,size,atm,                                                                                                                                                                                                                                                                                               hyd,population,govt,lawlvl,techlvl
+                    #self.window['updateText'].update(f"Index: {x[self.current_val][0]}\nName: {x[self.current_val][1]}\n--------------------------------------------\nStarport: {x[self.current_val][2]}           NavelBase: {x[self.current_val][3]}\nGasGiant: {x[self.current_val][4]}      Planetoid: {x[self.current_val][5]}\nScoutBase: {x[self.current_val][6]}        Size: {x[self.current_val][7]}\nAtm: {x[self.current_val][8]}         Hyd: {x[self.current_val][9]}\nPopulation: {x[self.current_val][10]}            Govt: {x[self.current_val][11]}\nLawLVL: {x[self.current_val][12]}\nTechLVL: {x[self.current_val][13]}")
+                    self.window['updateText'].update(f"Index: {x[self.current_val][0]}\nName: {x[self.current_val][1]}\n--------------------------------------------\nStarport: {x[self.current_val][2]}            NavelBase: {x[self.current_val][3]}\nGasGiant: {x[self.current_val][4]}     Planetoid: {x[self.current_val][5]}\nScoutBase: {x[self.current_val][6]}   Size: {x[self.current_val][7]}\nAtmosphere: {x[self.current_val][8]}       Hydrogenics: {x[self.current_val][9]}\nPopulation: {x[self.current_val][10]}         Govt: {x[self.current_val][11]}\nLawLVL: {x[self.current_val][12]}             TechLVL: {x[self.current_val][13]}")
+                except Exception as e:
+                    self.current_val += 1
+                    print(e)
+            elif event in ("Right"):
+                print("R")
+                self.current_val += 1
+                try:
+                    self.window['updateText'].update(f"Index: {x[self.current_val][0]}\nName: {x[self.current_val][1]}\n--------------------------------------------\nStarport: {x[self.current_val][2]}            NavelBase: {x[self.current_val][3]}\nGasGiant: {x[self.current_val][4]}     Planetoid: {x[self.current_val][5]}\nScoutBase: {x[self.current_val][6]}   Size: {x[self.current_val][7]}\nAtmosphere: {x[self.current_val][8]}       Hydrogenics: {x[self.current_val][9]}\nPopulation: {x[self.current_val][10]}         Govt: {x[self.current_val][11]}\nLawLVL: {x[self.current_val][12]}             TechLVL: {x[self.current_val][13]}")
+                except Exception as e:
+                    self.current_val = 0
+                    self.window['updateText'].update(f"Index: {x[self.current_val][0]}\nName: {x[self.current_val][1]}\n--------------------------------------------\nStarport: {x[self.current_val][2]}            NavelBase: {x[self.current_val][3]}\nGasGiant: {x[self.current_val][4]}     Planetoid: {x[self.current_val][5]}\nScoutBase: {x[self.current_val][6]}   Size: {x[self.current_val][7]}\nAtmosphere: {x[self.current_val][8]}       Hydrogenics: {x[self.current_val][9]}\nPopulation: {x[self.current_val][10]}         Govt: {x[self.current_val][11]}\nLawLVL: {x[self.current_val][12]}             TechLVL: {x[self.current_val][13]}")
+                    print(e)
+                    
+        
         self.searchQuery()
-    def searchQuery(self):
-        print("The options to search for are: planetName (1), size (2), atm (3), hyd (4), population (5), govt (6), lawlvl (7), techlvl (8), getall (9), run Create Star (10)")
-        try:
-            self.selection = int(input("Enter what you want to seach for: "))
-        except:
-            self.searchQuery()
-        self.symbol = str(input("Enter the symbol you want to search with, ex: >, <, = : "))
-        if self.selection == 1:
+    def searchQuery(self,search=None,symbol='=',selection=0):
+        #print("The options to search for are: planetName (1), size (2), atm (3), hyd (4), population (5), govt (6), lawlvl (7), techlvl (8), getall (9), run Create Star (10)")
+        #try:
+           # self.selection = int(input("Enter what you want to seach for: "))
+        # except:
+        #self.symbol = str(input("Enter the symbol you want to search with, ex: >, <, = : "))
+        self.symbol = symbol
+        #'planetName','size','atm','hyd','population','govt','lawlvl','techlvl','getall'
+        if selection == 'planetName':
             
-            self.searchName()
-        elif self.selection == 2:
+            return(self.searchName(search))
+        elif selection == 'size':
             
-            self.searchSize()
-        elif self.selection == 3:
+            return(self.searchSize(search))
+        elif selection == 'atm':
             
-            self.searchAtm()
-        elif self.selection == 4:
+            return(self.searchAtm(search))
+        elif selection == 'hyd':
             
-            self.searchHyd()
-        elif self.selection == 5:
+            return(self.searchHyd(search))
+        elif selection == 'population':
             
-            self.searchPop()
-        elif self.selection == 6:
+            return(self.searchPop(search))
+        elif selection == 'govt':
             
-            self.searchGov()
-        elif self.selection == 7:
+            return(self.searchGov(search))
+        elif selection == 'lawlvl':
             
-            self.searchLaw()
-        elif self.selection == 8:
+            return(self.searchLaw(search))
+        elif selection == 'techlvl':
             
-            self.searchTech()
-        elif self.selection == 9:
-            self.getall()
+            return(self.searchTech(search))
+        elif selection == 'getall':
+            return(self.getall())
         else:
-            self.searchQuery()
-    def searchTech(self):
-        self.techselect = int(input(f"Enter the tech level that you want to find return {self.symbol} results for: "))
+            self.mainRun()
+    def searchTech(self,search=None):
+        #self.techselect = int(input(f"Enter the tech level that you want to find return {self.symbol} results for: "))
+        self.techselect = search
         query = f"select * from starsystem where techlvl {self.symbol}={self.techselect}"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+        return(result)
         self.searchQuery()
-    def searchName(self):
-        name = input("Enter the planet name you want to search for: ")
-        name = "'" + name + "'"
-        query = f"select * from starsystem where planetName{self.symbol}={name}"
+    def searchName(self,search=None):
+        
+        query = f"select * from starsystem where planetName{self.symbol}={search}"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+        return(result)
         
         self.searchQuery()
-    def getall(self):
+    def getall(self,search=None):
         query = f"select * from starsystem"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+        return(result)
         self.searchQuery()
     
-    def searchSize(self):
+    def searchSize(self,search=None):
         name = 0
         try:
-            name = int(input("Enter the planet size you want to search for: "))
+            query = f"select * from starsystem where size{self.symbol}={search}"
+            self.cursor.execute(query)
+            result = self.cursor.fetchall()
         except:
-            self.searchSize()
-        query = f"select * from starsystem where size{self.symbol}={name}"
-        self.cursor.execute(query)
-        result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+            result = None
+        return(result)
         self.searchQuery()
-    def searchAtm(self):
+    def searchAtm(self,search=None):
+        '''
         name = 0
         try:
             name = int(input("Enter the planet atmosphere you want to search for: "))
         except:
             self.searchAtm()
-        query = f"select * from starsystem where atm{self.symbol}={name}"
+            '''
+        query = f"select * from starsystem where atm{self.symbol}={search}"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+        return(result)
         self.searchQuery()
-    def searchHyd(self):
+    def searchHyd(self,search=None):
+        '''
         name = 0
         try:
             name = int(input("Enter the planet hydrogeneics you want to search for: "))
         except:
             self.searchHyd()
-        query = f"select * from starsystem where hyd{self.symbol}={name}"
+        '''
+        query = f"select * from starsystem where hyd{self.symbol}={search}"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+        return(result)
         self.searchQuery()
-    def searchPop(self):
+    def searchPop(self,search=None):
+        '''
         name = 0
         try:
             name = int(input("Enter the planet population you want to search for: "))
         except:
             self.searchPop()
-        query = f"select * from starsystem where population{self.symbol}={name}"
+            '''
+        query = f"select * from starsystem where population{self.symbol}={search}"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+        return(result)
         self.searchQuery()
-    def searchGov(self):
-        name = 0
+    def searchGov(self,search=None):
+        
+        '''name = 0
         try:
             name = int(input("Enter the planet govt you want to search for: "))
         except:
             self.searchGov()
-        query = f"select * from starsystem where govt{self.symbol}={name}"
+            '''
+        query = f"select * from starsystem where govt{self.symbol}={search}"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+        return(result)
         self.searchQuery()
-    def searchLaw(self):
+    def searchLaw(self,search=None):
+        '''
         name = 0
         try:
             name = int(input("Enter the planet law level you want to search for: "))
         except:
             self.searchLaw()
-        query = f"select * from starsystem where lawlvl{self.symbol}={name}"
+            '''
+        query = f"select * from starsystem where lawlvl{self.symbol}={search}"
         self.cursor.execute(query)
         result = self.cursor.fetchall()
-        for i in result:         
-            txt = f"                                                                                  Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
-            new_str = txt.center(500)
-            print(new_str)
+        return(result)
         self.searchQuery()
 
 if __name__ == "__main__":
