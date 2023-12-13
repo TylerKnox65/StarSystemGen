@@ -6,6 +6,7 @@ import names
 
 
 
+
 class star():
     def __init__(self) -> None:
         #Func
@@ -63,7 +64,7 @@ class star():
             #print(f"Planet Name: {i[1]}, Starport:  {i[2]}, Navel Base:  {i[3]}, Gasgiant:  {i[4]}, Planetoid:  {i[5]}, Scout Base:  {i[6]}, Planet Size:  {i[7]}\nAtmosphere:  {i[8]}, Hydogenics:  {i[8]}, Population:  {i[10]}, Government level:  {i[11]}, Law Level:  {i[12]}, Tech Level:  {i[13]}\n")
             for i in result:
                     #print(f"\n          Planet Name: {i[1]}\n--------------------------------------\n  Starport:  {i[2]}         Navel Base: {i[3]}\n  Gasgiant: {i[4]}           Planetoid: {i[5]}\n  Scout Base: {i[6]}        Planet Size: {i[7]}\n  Atmosphere: {i[8]}         Hydrogeneics: {i[9]}\n  Population: {i[10]}         Government : {i[11]}\n  Law level: {i[12]}           Tech level: {i[13]}\n")
-                txt = f"            Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
+                txt = f"Planet Name: {i[1]}\n------------------------------\nStarPort: {i[2]}       Naval Base: {i[3]}\nGasGiant: {i[4]}     Plantetoid:{i[5]}\nScout Base: {i[6]}  Planet Size: {i[7]}\nAtmosphere: {i[8]}      Hydrogeneics: {i[9]}\nPopulation: {i[10]}      Government: {i[11]}\nLaw level: {i[12]}       Tech Level: {i[13]}\n"
                 new_str = txt.center(500)
                 print(new_str)
     
